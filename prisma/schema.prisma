@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Documents {
+  id            String   @id
+  subject       String
+  purpose       Purpose
+  date_released DateTime
+  date_received DateTime
+  entity        Entity[]
+  flow          Flow
+  signatory     String
+  isSigned      Boolean
+}
+
+model Entity {
+  id          Int        @id @default(autoincrement())
+  order       Int
+  file_id     String
+  office      Office
+  name        String
+  type        EntityType
+  documents   Documents  @relation(fields: [documentsId], references: [id])
+  documentsId String
+}
+
+enum EntityType {
+  SENDER
+  RECIPIENT
+}
+
+enum Purpose {
+  INFORMATION
+  SIGNATURE
+}
+
+enum Office {
+  PPDO
+  PICTU
+  PGO
+  PMDP
+  INVESTMENTS
+  OTHERS
+}
+
+enum Flow {
+  INCOMING
+  OUTGOING
+}
