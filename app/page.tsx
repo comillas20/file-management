@@ -1,8 +1,9 @@
 import { PlusCircle } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabContents } from "./components/tab-contents";
+import Link from "next/link";
 
 export default function Home() {
 	return (
@@ -14,14 +15,34 @@ export default function Home() {
 						<TabsTrigger value="incoming">Incoming</TabsTrigger>
 						<TabsTrigger value="outgoing">Outgoing</TabsTrigger>
 					</TabsList>
-					<div className="ml-auto flex items-center gap-2">
-						<Button size="sm" className="h-8 gap-1">
+					<TabsContent
+						value="incoming"
+						className="ml-auto flex items-center gap-2">
+						<Link
+							href="/incoming"
+							className={buttonVariants({
+								className: "h-8 gap-1 px-3",
+							})}>
 							<PlusCircle className="size-3.5" />
 							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-								Add Document
+								New Incoming Document
 							</span>
-						</Button>
-					</div>
+						</Link>
+					</TabsContent>
+					<TabsContent
+						value="outgoing"
+						className="flex items-center gap-2">
+						<Link
+							href="/outgoing"
+							className={buttonVariants({
+								className: "h-8 gap-1 px-3",
+							})}>
+							<PlusCircle className="size-3.5" />
+							<span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+								New Outgoing Document
+							</span>
+						</Link>
+					</TabsContent>
 				</div>
 				<TabContents />
 			</Tabs>
