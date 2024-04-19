@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
-		entity: true;
+		logs: true;
+		files: true;
 	};
 }>;
 
@@ -49,7 +50,7 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "Office Origin",
-		accessorFn: row => row.entity[0].office,
+		accessorFn: row => row.logs[0].office,
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Office Origin" />
 		),
@@ -81,7 +82,7 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "Recipients",
-		accessorFn: row => row.entity,
+		accessorFn: row => row.logs,
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Recipients" />
 		),

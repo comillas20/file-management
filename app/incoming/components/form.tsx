@@ -19,7 +19,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { UseFormReturn, useFieldArray, useForm } from "react-hook-form";
+import { UseFormReturn, useForm } from "react-hook-form";
 import {
 	IncomingDocType,
 	incomingDocumentSchema,
@@ -33,11 +33,15 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { createOrUpdateIncDocument } from "@/action/documents";
+import { useToast } from "@/components/ui/use-toast";
+import { fileWrapper } from "@/lib/utils";
 
 export function IncomingForm() {
 	const form = useForm<IncomingDocType>({
 		resolver: zodResolver(incomingDocumentSchema),
 		defaultValues: {
+			id: "ambatukam",
 			subject: "",
 			sender: {
 				name: "",
@@ -45,12 +49,26 @@ export function IncomingForm() {
 			},
 			signatory: "",
 			date_received: new Date(),
-			files: [],
+			files: null,
 		},
 	});
 
+	const { toast } = useToast();
+
 	async function onSubmit(values: IncomingDocType) {
-		console.log(values);
+		const { files, ...others } = values;
+		const filesFD = files ? fileWrapper(files) : null;
+
+		const result = await createOrUpdateIncDocument({
+			...others,
+			files: filesFD,
+		});
+		if (result) {
+			toast({
+				description: "Your document is successfully created.",
+			});
+		}
+		form.reset();
 	}
 
 	return (
@@ -142,6 +160,19 @@ function DocumentCard({ form }: Form) {
 						</FormItem>
 					)}
 				/>
+				<FormField
+					control={form.control}
+					name="signatory"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Signatory</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 			</CardContent>
 		</Card>
 	);
@@ -207,14 +238,15 @@ function FileUploadCard({ form }: Form) {
 			</CardHeader>
 			<CardContent className="flex flex-col gap-2">
 				<div className="grid grid-cols-3 gap-2">
-					{files.map((file, index) => (
-						<Tooltip key={index} delayDuration={0}>
-							<TooltipTrigger className="border border-dashed p-6 flex items-center justify-center">
-								<File className="aspect-square" />
-							</TooltipTrigger>
-							<TooltipContent>{file.name}</TooltipContent>
-						</Tooltip>
-					))}
+					{files &&
+						files.map((file, index) => (
+							<Tooltip key={index} delayDuration={0}>
+								<TooltipTrigger className="border border-dashed p-6 flex items-center justify-center">
+									<File className="aspect-square" />
+								</TooltipTrigger>
+								<TooltipContent>{file.name}</TooltipContent>
+							</Tooltip>
+						))}
 				</div>
 
 				<FormField
