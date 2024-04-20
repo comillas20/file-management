@@ -60,16 +60,16 @@ export function IncomingForm() {
 					files: null,
 			  }
 			: {
-			id: "ambatukam",
-			subject: "",
-			sender: {
-				name: "",
-				office: "Others",
-			},
-			signatory: "",
-			date_received: new Date(),
-			files: null,
-		},
+					id: "ambatukam",
+					subject: "",
+					sender: {
+						name: "",
+						office: "Others",
+					},
+					signatory: "",
+					date_received: new Date(),
+					files: null,
+			  },
 	});
 
 	async function onSubmit(values: IncomingDocType) {
@@ -268,25 +268,51 @@ function SenderCard({ form }: Form) {
 }
 
 function FileUploadCard({ form }: Form) {
-	const files = form.watch("files");
+	const deleteFileFromArray = (array: File[] | null, fileToRemove: File) => {
+		if (array === null) return;
+		return array.filter(arr => arr.name !== fileToRemove.name);
+	};
+
 	return (
 		<Card className="overflow-hidden">
 			<CardHeader>
 				<CardTitle>Attachments</CardTitle>
 			</CardHeader>
-			<CardContent className="flex flex-col gap-2">
-				<div className="grid grid-cols-3 gap-2">
-					{files &&
-						files.map((file, index) => (
-							<Tooltip key={index} delayDuration={0}>
-								<TooltipTrigger className="border border-dashed p-6 flex items-center justify-center">
-									<File className="aspect-square" />
-								</TooltipTrigger>
-								<TooltipContent>{file.name}</TooltipContent>
-							</Tooltip>
-						))}
-				</div>
-
+			<CardContent className="flex flex-col gap-4">
+				<FormField
+					control={form.control}
+					name="files"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<div className="space-y-2">
+									{field.value &&
+										field.value.map((file, index) => (
+											<div
+												key={index}
+												className="flex gap-1 group p-2 border rounded-sm items-center"
+												onClick={() =>
+													field.onChange(
+														deleteFileFromArray(
+															field.value,
+															file
+														)
+													)
+												}>
+												<span className="flex-1 text-ellipsis truncate text-xs font-medium">
+													{file.name}
+												</span>
+												<X
+													className="group-hover:inline hidden"
+													size={15}
+												/>
+											</div>
+										))}
+								</div>
+							</FormControl>
+						</FormItem>
+					)}
+				/>
 				<FormField
 					control={form.control}
 					name="files"
@@ -317,10 +343,9 @@ function FileUploadCard({ form }: Form) {
 							</FormControl>
 							<FormLabel
 								className={buttonVariants({
-									className: "flex w-full lg:min-w-60 gap-2",
+									className: "flex w-full lg:min-w-60",
 								})}>
 								<Upload className="size-4" />
-								<span>Upload</span>
 							</FormLabel>
 						</FormItem>
 					)}
