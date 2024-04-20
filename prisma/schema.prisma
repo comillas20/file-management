@@ -22,7 +22,7 @@ model File {
   name        String
   size        BigInt
   documentsId String
-  documents   Documents @relation(fields: [documentsId], references: [id])
+  documents   Documents @relation(fields: [documentsId], references: [id], onDelete: Cascade)
 }
 
 model Log {
@@ -31,7 +31,7 @@ model Log {
   office      Office
   name        String
   role        Role
-  documents   Documents @relation(fields: [documentsId], references: [id])
+  documents   Documents @relation(fields: [documentsId], references: [id], onDelete: Cascade)
   documentsId String
 }
 
