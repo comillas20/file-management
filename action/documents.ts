@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
-import { Office } from "@prisma/client";
+import { Flow, Office } from "@prisma/client";
 import { mkdir, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 
@@ -106,11 +106,22 @@ async function saveFiles(files: File[]) {
 	});
 }
 
-export async function getDocuments() {
+export async function getDocuments(flow?: Flow) {
 	return await prisma.documents.findMany({
 		include: {
 			logs: true,
 			files: true,
+		},
+		where: {
+			flow,
+		},
+	});
+}
+
+export async function deleteDocuments(id: string) {
+	return await prisma.documents.delete({
+		where: {
+			id,
 		},
 	});
 }

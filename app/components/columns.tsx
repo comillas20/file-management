@@ -3,7 +3,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../components/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { MoreHorizontal } from "lucide-react";
+import { Loader2, MoreHorizontalIcon } from "lucide-react";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { deleteDocuments } from "@/action/documents";
+import { useTransition } from "react";
+import { useDocuments } from "@/hooks/documents";
+import { toast } from "@/components/ui/use-toast";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -73,12 +84,24 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "actions",
-		cell: ({ row }) => (
-			<Button variant="ghost" className="size-8 p-0">
-				<span className="sr-only">Open menu</span>
-				<MoreHorizontal className="size-4" />
-			</Button>
-		),
+		cell: ({ row }) => {
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<MoreHorizontalIcon className="size-4" />
+						<span className="sr-only">Open menu</span>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent className="w-40">
+						<DropdownMenuItem asChild>
+							<Link href={`/incoming?doc=${row.original.id}`}>
+								Edit
+							</Link>
+						</DropdownMenuItem>
+						<DeleteDocument id={row.original.id} />
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
 
@@ -120,3 +143,27 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 		cell: ({ row }) => <Button />,
 	},
 ];
+
+function DeleteDocument({ id }: { id: string }) {
+	const [deleting, startDeleting] = useTransition();
+	const { revalidateDocuments } = useDocuments();
+
+	const handler = () => {
+		startDeleting(async () => {
+			await deleteDocuments(id);
+			revalidateDocuments();
+			toast({
+				description: "Your document is successfully deleted.",
+			});
+		});
+	};
+	return (
+		<DropdownMenuItem
+			onSelect={handler}
+			disabled={deleting}
+			className="space-x-2">
+			{deleting && <Loader2 className="animate-spin" />}
+			<span>Delete</span>
+		</DropdownMenuItem>
+	);
+}

@@ -31,9 +31,10 @@ type DocumentTableProps = {
 export function DocumentTable({ title, columns, flow }: DocumentTableProps) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const { data, revalidateDocuments } = useDocuments();
+	const { data } = useDocuments(flow);
+
 	const table = useReactTable({
-		data: data ? data.filter(d => d.flow === flow) : [],
+		data: data ?? [],
 		columns: columns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),

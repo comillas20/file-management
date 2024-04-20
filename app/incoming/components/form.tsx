@@ -1,16 +1,9 @@
 "use client";
+import { createOrUpdateIncDocument } from "@/action/documents";
+import { DatePicker } from "@/components/date-picker";
+import { TimePicker } from "@/components/time-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import {
-	Select,
-	SelectTrigger,
-	SelectValue,
-	SelectContent,
-	SelectItem,
-} from "@/components/ui/select";
-import { ChevronLeft, File, Upload } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -19,29 +12,54 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { UseFormReturn, useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { useDocuments } from "@/hooks/documents";
+import { fileWrapper } from "@/lib/utils";
 import {
 	IncomingDocType,
 	incomingDocumentSchema,
 } from "@/schema/incoming-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DatePicker } from "@/components/date-picker";
-import { TimePicker } from "@/components/time-picker";
 import { Office } from "@prisma/client";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { createOrUpdateIncDocument } from "@/action/documents";
-import { useToast } from "@/components/ui/use-toast";
-import { fileWrapper } from "@/lib/utils";
-import { useDocuments } from "@/hooks/documents";
+import { ChevronLeft, Upload, X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { UseFormReturn, useForm } from "react-hook-form";
 
 export function IncomingForm() {
+	const params = useSearchParams();
+	const documentId = params.get("doc");
+
+	const { toast } = useToast();
+	const { revalidateDocuments, getDocumentById } = useDocuments();
+
+	const documentToUpdate = documentId
+		? getDocumentById(documentId)
+		: undefined;
+
 	const form = useForm<IncomingDocType>({
 		resolver: zodResolver(incomingDocumentSchema),
-		defaultValues: {
+		defaultValues: documentToUpdate
+			? {
+					id: documentToUpdate.id,
+					subject: documentToUpdate.subject,
+					sender: {
+						name: documentToUpdate.logs[0].name,
+						office: documentToUpdate.logs[0].office,
+					},
+					signatory: documentToUpdate.signatory,
+					date_received: documentToUpdate.logs[0].logDate,
+					files: null,
+			  }
+			: {
 			id: "ambatukam",
 			subject: "",
 			sender: {
@@ -53,9 +71,6 @@ export function IncomingForm() {
 			files: null,
 		},
 	});
-
-	const { toast } = useToast();
-	const { revalidateDocuments } = useDocuments();
 
 	async function onSubmit(values: IncomingDocType) {
 		const { files, ...others } = values;
@@ -74,18 +89,34 @@ export function IncomingForm() {
 		form.reset();
 	}
 
+	const router = useRouter();
+
 	return (
 		<Form {...form}>
 			<form
 				className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4"
 				onSubmit={form.handleSubmit(onSubmit)}>
 				<div className="flex items-center gap-4">
-					<Button variant="outline" size="icon" className="size-7">
-						<ChevronLeft className="h-4 w-4" />
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						className="size-7"
+						onClick={() => router.back()}>
+						<ChevronLeft className="size-4" />
 						<span className="sr-only">Back</span>
 					</Button>
+					{documentToUpdate && (
+						<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-ellipsis">
+							{documentToUpdate.subject}
+						</h1>
+					)}
 					<div className="hidden items-center gap-2 md:ml-auto md:flex">
-						<Button type="button" variant="outline" size="sm">
+						<Button
+							type="button"
+							variant="outline"
+							size="sm"
+							onClick={() => form.reset()}>
 							Discard
 						</Button>
 						<Button type="submit" size="sm">
@@ -103,7 +134,11 @@ export function IncomingForm() {
 					</div>
 				</div>
 				<div className="flex items-center justify-center gap-2 md:hidden">
-					<Button type="button" variant="outline" size="sm">
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={() => form.reset()}>
 						Discard
 					</Button>
 					<Button type="submit" size="sm">
