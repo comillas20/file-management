@@ -14,12 +14,14 @@ export function TabContents() {
 				<DocumentTable
 					title="Incoming Documents"
 					columns={incDocColumns}
+					flow="INCOMING"
 				/>
 			</TabsContent>
 			<TabsContent value="outgoing">
 				<DocumentTable
 					title="Outgoing Documents"
 					columns={outDocColumns}
+					flow="OUTGOING"
 				/>
 			</TabsContent>
 		</React.Fragment>

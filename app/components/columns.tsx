@@ -2,6 +2,8 @@ import { Documents, Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../components/data-table-column-header";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { MoreHorizontal } from "lucide-react";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -49,17 +51,19 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 		),
 	},
 	{
-		id: "Office Origin",
+		id: "Office",
 		accessorFn: row => row.logs[0].office,
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Office Origin" />
+			<DataTableColumnHeader column={column} title="Office" />
 		),
 	},
 	{
-		accessorKey: "date_received",
+		id: "Date Received",
+		accessorFn: row => row.logs[0].logDate,
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Received" />
 		),
+		cell: ({ row }) => format(row.original.logs[0].logDate, "P p"),
 	},
 	{
 		accessorKey: "signatory",
@@ -69,7 +73,12 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "actions",
-		cell: ({ row }) => <Button />,
+		cell: ({ row }) => (
+			<Button variant="ghost" className="size-8 p-0">
+				<span className="sr-only">Open menu</span>
+				<MoreHorizontal className="size-4" />
+			</Button>
+		),
 	},
 ];
 

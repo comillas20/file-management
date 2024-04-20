@@ -20,16 +20,20 @@ import { useState } from "react";
 import { DataTable } from "../../components/data-table";
 import { DataTablePagination } from "../../components/data-table-pagination";
 import { Doc } from "./columns";
+import { useDocuments } from "@/hooks/documents";
+import { Flow } from "@prisma/client";
 
 type DocumentTableProps = {
 	title: string;
 	columns: ColumnDef<Doc>[];
+	flow: Flow;
 };
-export function DocumentTable({ title, columns }: DocumentTableProps) {
+export function DocumentTable({ title, columns, flow }: DocumentTableProps) {
 	const [rowSelection, setRowSelection] = useState({});
 	const [sorting, setSorting] = useState<SortingState>([]);
+	const { data, revalidateDocuments } = useDocuments();
 	const table = useReactTable({
-		data: [],
+		data: data ? data.filter(d => d.flow === flow) : [],
 		columns: columns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),

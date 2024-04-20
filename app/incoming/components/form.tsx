@@ -36,6 +36,7 @@ import {
 import { createOrUpdateIncDocument } from "@/action/documents";
 import { useToast } from "@/components/ui/use-toast";
 import { fileWrapper } from "@/lib/utils";
+import { useDocuments } from "@/hooks/documents";
 
 export function IncomingForm() {
 	const form = useForm<IncomingDocType>({
@@ -54,6 +55,7 @@ export function IncomingForm() {
 	});
 
 	const { toast } = useToast();
+	const { revalidateDocuments } = useDocuments();
 
 	async function onSubmit(values: IncomingDocType) {
 		const { files, ...others } = values;
@@ -68,6 +70,7 @@ export function IncomingForm() {
 				description: "Your document is successfully created.",
 			});
 		}
+		revalidateDocuments();
 		form.reset();
 	}
 

@@ -105,3 +105,12 @@ async function saveFiles(files: File[]) {
 		writeFile(path, buffer);
 	});
 }
+
+export async function getDocuments() {
+	return await prisma.documents.findMany({
+		include: {
+			logs: true,
+			files: true,
+		},
+	});
+}
