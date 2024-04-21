@@ -70,19 +70,107 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 					},
 				},
 			},
-			// files: files
-			// 	? {
-			// 			updateMany: {
-			// 				data: files.map(file => ({
-			// 					name: file.name,
-			// 					size: file.size,
-			// 				})),
-			// 				where: {
-			// 					documentsId: values.id,
-			// 				},
-			// 			},
-			// 	  }
-			// 	: undefined,
+			files: files
+				? {
+						deleteMany: {
+							documentsId: values.id,
+						},
+						createMany: {
+							data: files.map(file => ({
+								name: file.name,
+								size: file.size,
+							})),
+						},
+				  }
+				: {
+						deleteMany: {
+							documentsId: values.id,
+						},
+				  },
+		},
+	});
+
+	return newDoc;
+}
+
+type OutgoingDocType = {
+	id: string;
+	subject: string;
+	purpose: Purpose;
+	files: FormData | null;
+	recipient: {
+		name: string;
+		office: Office;
+		date_released: Date;
+	}[];
+};
+export async function createOrUpdateOutDocument(values: OutgoingDocType) {
+	const files = values.files ? fileUnwrapper(values.files) : null;
+	if (files) saveFiles(files);
+
+	const newDoc = await prisma.documents.upsert({
+		create: {
+			subject: values.subject,
+			purpose: values.purpose,
+			flow: "OUTGOING",
+			logs: {
+				createMany: {
+					data: values.recipient.map(value => ({
+						logDate: value.date_released,
+						name: value.name,
+						office: value.office,
+						role: "RECIPIENT",
+					})),
+				},
+			},
+			files: files
+				? {
+						createMany: {
+							data: files.map(file => ({
+								name: file.name,
+								size: file.size,
+							})),
+						},
+				  }
+				: undefined,
+		},
+		where: {
+			id: values.id,
+		},
+		update: {
+			subject: values.subject,
+			purpose: values.purpose,
+			flow: "OUTGOING",
+			logs: {
+				deleteMany: {
+					documentsId: values.id,
+			},
+				createMany: {
+					data: values.recipient.map(value => ({
+						logDate: value.date_released,
+						name: value.name,
+						office: value.office,
+						role: "RECIPIENT",
+					})),
+				},
+			},
+			files: files
+				? {
+						deleteMany: {
+							documentsId: values.id,
+						},
+						createMany: {
+							data: files.map(file => ({
+								name: file.name,
+								size: file.size,
+							})),
+						},
+				  }
+				: {
+						deleteMany: {
+							documentsId: values.id,
+						},
+				  },
 		},
 	});
 
@@ -106,14 +194,11 @@ async function saveFiles(files: File[]) {
 	});
 }
 
-export async function getDocuments(flow?: Flow) {
+export async function getDocuments() {
 	return await prisma.documents.findMany({
 		include: {
 			logs: true,
 			files: true,
-		},
-		where: {
-			flow,
 		},
 	});
 }
