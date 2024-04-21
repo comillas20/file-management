@@ -27,11 +27,10 @@ type DocumentTableProps = {
 	title: string;
 	columns: ColumnDef<Doc>[];
 	flow: Flow;
+	data: Doc[] | undefined;
 };
-export function DocumentTable({ title, columns, flow }: DocumentTableProps) {
-	const [rowSelection, setRowSelection] = useState({});
+export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const { data } = useDocuments(flow);
 
 	const table = useReactTable({
 		data: data ?? [],
@@ -39,13 +38,12 @@ export function DocumentTable({ title, columns, flow }: DocumentTableProps) {
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
 		state: {
 			sorting,
-			rowSelection,
 		},
 		enableMultiRowSelection: false,
+		enableRowSelection: false,
 	});
 	return (
 		<Card>
