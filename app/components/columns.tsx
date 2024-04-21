@@ -105,7 +105,8 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-40">
 						<DropdownMenuItem asChild>
-							<Link href={`/incoming?doc=${row.original.id}`}>
+							<Link
+								href={`/incoming/update?doc=${row.original.id}`}>
 								Edit
 							</Link>
 						</DropdownMenuItem>
@@ -169,7 +170,25 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "actions",
-		cell: ({ row }) => <Button />,
+		cell: ({ row }) => {
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<MoreHorizontalIcon className="size-4" />
+						<span className="sr-only">Open menu</span>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent className="w-40">
+						<DropdownMenuItem asChild>
+							<Link
+								href={`/outgoing/update?doc=${row.original.id}`}>
+								Edit
+							</Link>
+						</DropdownMenuItem>
+						<DeleteDocument id={row.original.id} />
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
 
