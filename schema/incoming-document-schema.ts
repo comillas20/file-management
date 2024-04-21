@@ -8,7 +8,7 @@ export const incomingDocumentSchema = z.object({
 		name: z.string().min(1, { message: "This is required" }),
 		office: z.nativeEnum(Office),
 	}),
-	signatory: z.string().min(1, { message: "This is required" }),
+	signatory: z.string().min(1, { message: "This is required" }).nullable(),
 	files: z.instanceof(File).array().nullable(),
 });
 
