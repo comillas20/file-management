@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
-import { Flow, Office } from "@prisma/client";
+import { Flow, Office, Purpose } from "@prisma/client";
 import { mkdir, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 
@@ -14,7 +14,7 @@ type IncDocument = {
 		name: string;
 		office: Office;
 	};
-	signatory: string;
+	signatory: string | null;
 	files: FormData | null;
 };
 
@@ -56,8 +56,6 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 			signatory: values.signatory,
 			flow: "INCOMING",
 			logs: {
-				// Updating all (even if it always only have one) logs
-				// Note: can't use update cuz documentsId aint unique
 				updateMany: {
 					data: {
 						logDate: values.date_received,
@@ -144,7 +142,7 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 			logs: {
 				deleteMany: {
 					documentsId: values.id,
-			},
+				},
 				createMany: {
 					data: values.recipient.map(value => ({
 						logDate: value.date_released,

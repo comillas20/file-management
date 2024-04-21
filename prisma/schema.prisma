@@ -13,7 +13,7 @@ model Documents {
   purpose   Purpose
   logs      Log[]
   flow      Flow
-  signatory String
+  signatory String?
   files     File[]
 }
 
