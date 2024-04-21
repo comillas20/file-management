@@ -1,8 +1,9 @@
+"use client";
 import { Documents, Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../components/data-table-column-header";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { format, isBefore } from "date-fns";
 import { Loader2, MoreHorizontalIcon } from "lucide-react";
 import {
 	DropdownMenu,
@@ -15,6 +16,8 @@ import { deleteDocuments } from "@/action/documents";
 import { useTransition } from "react";
 import { useDocuments } from "@/hooks/documents";
 import { toast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { ReceiverBadge } from "@/components/receiver-badge";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -62,10 +65,19 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 		),
 	},
 	{
-		id: "Office",
+		id: "Origin",
 		accessorFn: row => row.logs[0].office,
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Office" />
+			<DataTableColumnHeader column={column} title="Origin" />
+		),
+		cell: ({ row }) => (
+			<div className="space-x-2">
+				<span>{row.original.logs[0].name}</span>
+				<span>—</span>
+				<span className="font-semibold">
+					{row.original.logs[0].office}
+				</span>
+			</div>
 		),
 	},
 	{
@@ -74,7 +86,7 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Received" />
 		),
-		cell: ({ row }) => format(row.original.logs[0].logDate, "P p"),
+		cell: ({ row }) => format(row.original.logs[0].logDate, "PPP p"),
 	},
 	{
 		accessorKey: "signatory",
@@ -118,18 +130,35 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Recipients" />
 		),
-		cell: ({ row }) => <Button variant="link" />,
-	},
-	{
-		accessorKey: "date_released",
-		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Date Released" />
+		cell: ({ row }) => (
+			<Dialog>
+				<DialogTrigger className="text-sm font-semibold text-primary">
+					View
+				</DialogTrigger>
+				<DialogContent>
+					{row.original.logs
+						.sort((a, b) =>
+							isBefore(a.logDate, b.logDate) ? -1 : 1
+						)
+						.map(log => (
+							<ReceiverBadge
+								key={log.id}
+								data={{
+									name: log.name,
+									date_released: log.logDate,
+									office: log.office,
+								}}
+							/>
+						))}
+				</DialogContent>
+			</Dialog>
 		),
 	},
 	{
-		accessorKey: "date_received",
+		id: "Date Released",
+		accessorFn: row => format(row.logs[0].logDate, "PPP p"),
 		header: ({ column }) => (
-			<DataTableColumnHeader column={column} title="Date Received" />
+			<DataTableColumnHeader column={column} title="Date Released" />
 		),
 	},
 	{
