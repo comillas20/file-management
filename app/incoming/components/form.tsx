@@ -1,5 +1,6 @@
 "use client";
 import { createOrUpdateIncDocument } from "@/action/documents";
+import { Doc } from "@/app/components/columns";
 import { DatePicker } from "@/components/date-picker";
 import { TimePicker } from "@/components/time-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -30,33 +31,29 @@ import {
 } from "@/schema/incoming-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Office } from "@prisma/client";
-import { ChevronLeft, Upload, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronLeft, PlusIcon, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 
-export function IncomingForm() {
-	const params = useSearchParams();
-	const documentId = params.get("doc");
-
+type IncomingFormProps = {
+	data?: Doc;
+};
+export function IncomingForm({ data }: IncomingFormProps) {
 	const { toast } = useToast();
-	const { revalidateDocuments, getDocumentById } = useDocuments();
-
-	const documentToUpdate = documentId
-		? getDocumentById(documentId)
-		: undefined;
+	const { revalidateDocuments } = useDocuments();
 
 	const form = useForm<IncomingDocType>({
 		resolver: zodResolver(incomingDocumentSchema),
-		defaultValues: documentToUpdate
+		defaultValues: data
 			? {
-					id: documentToUpdate.id,
-					subject: documentToUpdate.subject,
+					id: data.id,
+					subject: data.subject,
 					sender: {
-						name: documentToUpdate.logs[0].name,
-						office: documentToUpdate.logs[0].office,
+						name: data.logs[0].name,
+						office: data.logs[0].office,
 					},
-					signatory: documentToUpdate.signatory,
-					date_received: documentToUpdate.logs[0].logDate,
+					signatory: data.signatory,
+					date_received: data.logs[0].logDate,
 					files: null,
 			  }
 			: {
@@ -82,11 +79,13 @@ export function IncomingForm() {
 		});
 		if (result) {
 			toast({
-				description: "Your document is successfully created.",
+				description: data
+					? "Your document is successfully updated."
+					: "Your document is successfully created.",
 			});
 		}
 		revalidateDocuments();
-		form.reset();
+		if (!data) form.reset();
 	}
 
 	const router = useRouter();
@@ -106,9 +105,9 @@ export function IncomingForm() {
 						<ChevronLeft className="size-4" />
 						<span className="sr-only">Back</span>
 					</Button>
-					{documentToUpdate && (
+					{data && (
 						<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-ellipsis">
-							{documentToUpdate.subject}
+							{data.subject}
 						</h1>
 					)}
 					<div className="hidden items-center gap-2 md:ml-auto md:flex">
@@ -205,7 +204,7 @@ function DocumentCard({ form }: Form) {
 						<FormItem>
 							<FormLabel>Signatory</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input {...field} value={field.value ?? ""} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -345,7 +344,7 @@ function FileUploadCard({ form }: Form) {
 								className={buttonVariants({
 									className: "flex w-full lg:min-w-60",
 								})}>
-								<Upload className="size-4" />
+								<PlusIcon className="size-4" />
 							</FormLabel>
 						</FormItem>
 					)}
