@@ -30,3 +30,17 @@ export function fileUnwrapper(files: FormData) {
 		.getAll("file")
 		.filter(file => fileParser.safeParse(file).success) as File[];
 }
+
+export function formatFileSize(sizeInBytes: bigint): string {
+	const sizeInKB = Number(sizeInBytes) / 1024;
+	const sizeInMB = sizeInKB / 1024;
+	const sizeInGB = sizeInMB / 1024;
+
+	if (sizeInGB >= 1) {
+		return `${sizeInGB.toFixed(2)} GB`;
+	} else if (sizeInMB >= 1) {
+		return `${sizeInMB.toFixed(2)} MB`;
+	} else {
+		return `${sizeInKB.toFixed(2)} KB`;
+	}
+}
