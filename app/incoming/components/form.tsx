@@ -54,7 +54,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					},
 					signatory: data.signatory,
 					date_received: data.logs[0].logDate,
-					files: null,
+					files: data.files.map(file => new File([], file.name)),
 			  }
 			: {
 					id: "ambatukam",
