@@ -16,8 +16,15 @@ import { deleteDocuments } from "@/action/documents";
 import { useTransition } from "react";
 import { useDocuments } from "@/hooks/documents";
 import { toast } from "@/components/ui/use-toast";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import { ReceiverBadge } from "@/components/receiver-badge";
+import { formatFileSize } from "@/lib/utils";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -95,6 +102,36 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 		),
 	},
 	{
+		accessorKey: "files",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Files" />
+		),
+		cell: ({ row }) => {
+			return row.original.files.length > 0 ? (
+				<Dialog>
+					<DialogTrigger className="text-sm font-semibold text-primary">
+						View Files
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Files</DialogTitle>
+						</DialogHeader>
+						{row.original.files.map(file => (
+							<div key={file.id}>
+								{file.name.concat(
+									" — ",
+									formatFileSize(file.size)
+								)}
+							</div>
+						))}
+					</DialogContent>
+				</Dialog>
+			) : (
+				<div>No files</div>
+			);
+		},
+	},
+	{
 		id: "actions",
 		cell: ({ row }) => {
 			return (
@@ -134,9 +171,12 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 		cell: ({ row }) => (
 			<Dialog>
 				<DialogTrigger className="text-sm font-semibold text-primary">
-					View
+					View Recipients
 				</DialogTrigger>
 				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Recipients</DialogTitle>
+					</DialogHeader>
 					{row.original.logs
 						.sort((a, b) =>
 							isBefore(a.logDate, b.logDate) ? -1 : 1
@@ -167,6 +207,36 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Purpose" />
 		),
+	},
+	{
+		accessorKey: "files",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Files" />
+		),
+		cell: ({ row }) => {
+			return row.original.files.length > 0 ? (
+				<Dialog>
+					<DialogTrigger className="text-sm font-semibold text-primary">
+						View Files
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Files</DialogTitle>
+						</DialogHeader>
+						{row.original.files.map(file => (
+							<div key={file.id}>
+								{file.name.concat(
+									" — ",
+									formatFileSize(file.size)
+								)}
+							</div>
+						))}
+					</DialogContent>
+				</Dialog>
+			) : (
+				<div>No files</div>
+			);
+		},
 	},
 	{
 		id: "actions",
