@@ -1,8 +1,8 @@
 "use client";
 import { useDocuments } from "@/hooks/documents";
-import { incDocColumns } from "../components/columns";
-import { DocumentTable } from "../components/document-table";
-import { TabList } from "../components/tab-list";
+import { incDocColumns } from "@/app/components/columns";
+import { DocumentTable } from "@/app/components/document-table";
+import { TabList } from "@/app/components/tab-list";
 
 export default function IncomingPage() {
 	const { data } = useDocuments();
