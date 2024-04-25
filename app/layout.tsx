@@ -1,9 +1,8 @@
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import "@/style/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "@/style/globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { SideNavigation } from "./components/side-navigation";
-import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +20,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<TooltipProvider>
 					<div className="flex min-h-screen w-full flex-col bg-muted/40">
-						<SideNavigation />
-						<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+						<div className="flex flex-col sm:gap-4 sm:py-4 sm:px-14">
 							{children}
 						</div>
 					</div>

@@ -2,6 +2,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Flow } from "@prisma/client";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { UserNav } from "./user-nav";
 
 type TabListProps = {
 	flow: Flow;
@@ -23,7 +24,7 @@ export function TabList({ flow }: TabListProps) {
 					Outgoing
 				</Link>
 			</div>
-			<div className="ml-auto flex items-center gap-2">
+			<div className="ml-auto flex items-center gap-4">
 				{flow === "INCOMING" ? (
 					<Link
 						href="/incoming/create"
@@ -47,6 +48,7 @@ export function TabList({ flow }: TabListProps) {
 						</span>
 					</Link>
 				)}
+				<UserNav />
 			</div>
 		</div>
 	);

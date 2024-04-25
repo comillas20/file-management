@@ -1,6 +1,8 @@
+import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default function LandingPage() {
-	// redirect("/incoming");
-	return <div></div>;
+export default async function LandingPage() {
+	const { user } = await validateRequest();
+	if (user) redirect("/incoming");
+	else redirect("/authentication/login");
 }

@@ -96,3 +96,8 @@ export async function logout() {
 	);
 	return redirect("/authentication/login");
 }
+
+// Needed for client components
+export async function getSession() {
+	return await validateRequest();
+}
