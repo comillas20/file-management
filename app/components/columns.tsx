@@ -1,10 +1,9 @@
 "use client";
-import { Documents, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../components/data-table-column-header";
-import { Button } from "@/components/ui/button";
 import { format, isBefore } from "date-fns";
-import { Loader2, MoreHorizontalIcon } from "lucide-react";
+import { DownloadIcon, Loader2, MoreHorizontalIcon } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { ReceiverBadge } from "@/components/receiver-badge";
 import { formatFileSize } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 
 export type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -117,11 +117,21 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 							<DialogTitle>Files</DialogTitle>
 						</DialogHeader>
 						{row.original.files.map(file => (
-							<div key={file.id}>
+							<div
+								key={file.id}
+								className="flex gap-2 justify-between items-center">
 								{file.name.concat(
 									" — ",
 									formatFileSize(file.size)
 								)}
+								<a
+									href={"files/" + file.name}
+									className={buttonVariants({
+										variant: "outline",
+									})}
+									download>
+									<DownloadIcon className="size-4" />
+								</a>
 							</div>
 						))}
 					</DialogContent>
@@ -224,11 +234,21 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 							<DialogTitle>Files</DialogTitle>
 						</DialogHeader>
 						{row.original.files.map(file => (
-							<div key={file.id}>
+							<div
+								key={file.id}
+								className="flex gap-2 justify-between items-center">
 								{file.name.concat(
 									" — ",
 									formatFileSize(file.size)
 								)}
+								<a
+									href={"files/" + file.name}
+									className={buttonVariants({
+										variant: "outline",
+									})}
+									download>
+									<DownloadIcon className="size-4" />
+								</a>
 							</div>
 						))}
 					</DialogContent>
