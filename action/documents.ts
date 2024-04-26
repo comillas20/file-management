@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
-import { Flow, Office, Purpose } from "@prisma/client";
+import { Office, Purpose } from "@prisma/client";
 import { mkdir, readdir, writeFile } from "fs/promises";
 import { join } from "path";
 
@@ -178,16 +178,16 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 async function saveFiles(files: File[]) {
 	// trying to read the directory to see its existence before actually uploading files to it
 	try {
-		await readdir(join(process.cwd(), "files"));
+		await readdir(join(process.cwd(), "public/files"));
 	} catch (error) {
 		// then create the directory if not read/found
 		console.log("Creating directory for files...");
-		await mkdir(join(process.cwd(), "files"));
+		await mkdir(join(process.cwd(), "public/files"));
 	}
 	files.forEach(async file => {
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
-		const path = join(process.cwd(), "files", file.name);
+		const path = join(process.cwd(), "public/files", file.name);
 		writeFile(path, buffer);
 	});
 }
