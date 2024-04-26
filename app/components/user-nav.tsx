@@ -21,11 +21,11 @@ export function UserNav() {
 				<Button
 					variant="outline"
 					className="flex items-center justify-center rounded-full bg-muted"
-					size="sm">
+					size="icon">
 					{data && data.user ? (
 						data.user.username.charAt(0).toUpperCase()
 					) : (
-						<User2 className="rounded-full aspect-square size-full" />
+						<User2 className="rounded-full aspect-square" />
 					)}
 				</Button>
 			</DropdownMenuTrigger>
@@ -42,9 +42,15 @@ export function UserNav() {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{data && data.user ? (
-					<DropdownMenuItem onSelect={async () => logout()}>
-						Logout
-					</DropdownMenuItem>
+					<>
+						<DropdownMenuItem asChild>
+							<Link href="/logs">View Logs</Link>
+						</DropdownMenuItem>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem onSelect={async () => logout()}>
+							Logout
+						</DropdownMenuItem>
+					</>
 				) : (
 					<DropdownMenuItem asChild>
 						<Link href="/authentication/login">Login</Link>
