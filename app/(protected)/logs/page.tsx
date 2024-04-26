@@ -1,11 +1,5 @@
 "use client";
 import { UserNav } from "@/app/components/user-nav";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useDocuments } from "@/hooks/documents";
 import { format, isBefore } from "date-fns";
