@@ -3,8 +3,8 @@
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
 import { Office, Purpose } from "@prisma/client";
-import { mkdir, readdir, writeFile } from "fs/promises";
-import { join } from "path";
+import { access, mkdir, readdir, writeFile } from "fs/promises";
+import { join, parse } from "path";
 
 type IncDocument = {
 	id: string;
@@ -104,7 +104,7 @@ type OutgoingDocType = {
 };
 export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 	const files = values.files ? fileUnwrapper(values.files) : null;
-	if (files) saveFiles(files);
+	const moddifiedFiles = files ? await saveFiles(files) : null;
 
 	const newDoc = await prisma.documents.upsert({
 		create: {
@@ -121,10 +121,10 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 					})),
 				},
 			},
-			files: files
+			files: moddifiedFiles
 				? {
 						createMany: {
-							data: files.map(file => ({
+							data: moddifiedFiles.map(file => ({
 								name: file.name,
 								size: file.size,
 							})),
@@ -152,13 +152,13 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 					})),
 				},
 			},
-			files: files
+			files: moddifiedFiles
 				? {
 						deleteMany: {
 							documentsId: values.id,
 						},
 						createMany: {
-							data: files.map(file => ({
+							data: moddifiedFiles.map(file => ({
 								name: file.name,
 								size: file.size,
 							})),
@@ -184,12 +184,39 @@ async function saveFiles(files: File[]) {
 		console.log("Creating directory for files...");
 		await mkdir(join(process.cwd(), "public/files"));
 	}
-	files.forEach(async file => {
+
+	const filePromises = files.map(async file => {
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
-		const path = join(process.cwd(), "public/files", file.name);
+		const moddifiedFilename = await modifyFilename(file.name);
+		const path = join(process.cwd(), "public/files", moddifiedFilename);
 		writeFile(path, buffer);
+		return {
+			name: moddifiedFilename,
+			size: file.size,
+		};
 	});
+
+	return await Promise.all(filePromises);
+}
+
+async function modifyFilename(filename: string) {
+	let fileExists = true;
+	let newFilename = filename;
+
+	for (var i = 2; fileExists; i++) {
+		try {
+			await access(join(process.cwd(), "public/files", newFilename));
+			const parsedPath = parse(filename);
+			newFilename = join(
+				parsedPath.dir,
+				`${parsedPath.name} (${i})${parsedPath.ext}`
+			);
+		} catch (err) {
+			fileExists = false;
+		}
+	}
+	return newFilename;
 }
 
 export async function getDocuments() {
