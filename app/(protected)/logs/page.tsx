@@ -1,10 +1,12 @@
 "use client";
 import { UserNav } from "@/app/components/user-nav";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { useDocuments } from "@/hooks/documents";
-import { format, isBefore } from "date-fns";
+import { format, getYear, isBefore, isSameMonth, isSameYear } from "date-fns";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 export default function LogsPage() {
 	const { getDocumentsByLogDate } = useDocuments();
@@ -35,27 +37,55 @@ export default function LogsPage() {
 						?.sort((a, b) =>
 							isBefore(a.logDate, b.logDate) ? 1 : -1
 						)
-						.map((d, index) => (
-							<ul key={index} className="space-y-1">
-								<h4 className="font-medium text-lg">
-									{format(d.logDate, "PPP")}
-								</h4>
-								{d.documents.map(document => (
-									<li
-										key={document.id}
-										className="ml-8 list-disc text-lg">
-										{document.subject.concat(
-											document.flow === "INCOMING"
-												? " received from "
-												: " sent to ",
-											document.office,
-											" @ ",
-											format(document.logDate, "p")
-										)}
-									</li>
-								))}
-							</ul>
-						))}
+						.map((d, index, data) => {
+							const isMonthBlockStart =
+								index > 0 &&
+								!isSameMonth(
+									data[index - 1].logDate,
+									d.logDate
+								);
+
+							const isFirstMonthBlock = index === 0;
+
+							return (
+								<React.Fragment key={index}>
+									{(isMonthBlockStart ||
+										isFirstMonthBlock) && (
+										<div className="py-2 relative flex items-center justify-center">
+											<Separator className="absolute" />
+											<span className="bg-background px-2 font-bold z-10">
+												{format(d.logDate, "MMMM yyyy")}
+											</span>
+										</div>
+									)}
+									<ul className="space-y-1">
+										<h4 className="font-medium text-lg">
+											{format(d.logDate, "PPP")}
+										</h4>
+										{d.documents.map(document => (
+											<li
+												key={document.id}
+												className="ml-8 list-disc text-lg">
+												{document.subject.concat(
+													document.flow === "INCOMING"
+														? " received from "
+														: document.purpose ===
+														  "INFORMATION"
+														? " sent to "
+														: " sent to be signed by ",
+													document.office,
+													" @ ",
+													format(
+														document.logDate,
+														"p"
+													)
+												)}
+											</li>
+										))}
+									</ul>
+								</React.Fragment>
+							);
+						})}
 				</div>
 			</main>
 		</div>
