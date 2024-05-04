@@ -76,7 +76,7 @@ export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 								.getColumn("subject")
 								?.setFilterValue(event.target.value)
 						}
-						placeholder="Search subjects"
+						placeholder="Search a subject"
 					/>
 					<span className="aspect-square border border-input bg-background h-10 flex items-center justify-center rounded-e-md">
 						<Search size={15} />

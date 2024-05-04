@@ -181,7 +181,6 @@ async function saveFiles(files: File[]) {
 		await readdir(join(process.cwd(), "public/files"));
 	} catch (error) {
 		// then create the directory if not read/found
-		console.log("Creating directory for files...");
 		await mkdir(join(process.cwd(), "public/files"));
 	}
 

@@ -16,11 +16,13 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Login, loginSchema } from "@/schema/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export function LoginForm() {
 	const form = useForm<Login>({
@@ -31,17 +33,20 @@ export function LoginForm() {
 		},
 	});
 
+	const [message, setMessage] = useState<string>();
 	async function onSubmit(values: Login) {
-		console.log(values);
-		const error = await login(values);
+		const result = await login(values);
+		if (result) {
+			setMessage(result.error);
+		}
 	}
 	return (
-		<Card className="mx-auto max-w-sm">
+		<Card className="mx-auto max-w-sm w-80">
 			<CardHeader>
 				<CardTitle className="text-2xl">Login</CardTitle>
-				<CardDescription>
+				{/* <CardDescription>
 					Enter your email below to login to your account
-				</CardDescription>
+				</CardDescription> */}
 			</CardHeader>
 			<CardContent>
 				<Form {...form}>
@@ -56,6 +61,7 @@ export function LoginForm() {
 										<FormControl>
 											<Input type="text" {...field} />
 										</FormControl>
+										<FormMessage />
 									</FormItem>
 								)}
 							/>
@@ -66,15 +72,16 @@ export function LoginForm() {
 									<FormItem>
 										<div className="flex items-center">
 											<FormLabel>Password</FormLabel>
-											<Link
+											{/* <Link
 												href="#"
 												className="ml-auto inline-block text-sm underline">
 												Forgot your password?
-											</Link>
+											</Link> */}
 										</div>
 										<FormControl>
 											<Input type="password" {...field} />
 										</FormControl>
+										<FormMessage />
 									</FormItem>
 								)}
 							/>
@@ -82,11 +89,8 @@ export function LoginForm() {
 								Login
 							</Button>
 						</div>
-						<div className="mt-4 text-center text-sm">
-							Don&apos;t have an account?{" "}
-							<Link href="#" className="underline">
-								Sign up
-							</Link>
+						<div className="mt-4 text-center text-sm text-destructive">
+							{message}
 						</div>
 					</form>
 				</Form>
