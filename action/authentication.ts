@@ -101,3 +101,46 @@ export async function logout() {
 export async function getSession() {
 	return await validateRequest();
 }
+
+type Account = {
+	id: string;
+	username: string;
+	newPassword: string;
+};
+export async function updateAccount(
+	data: Partial<Account>
+): Promise<{ error: string | null }> {
+	const { id, username, newPassword } = data;
+	if (!id)
+		return {
+			error: "No account ID detected. Please refresh.",
+		};
+	const hashedPassword = newPassword
+		? await new Argon2id().hash(newPassword)
+		: undefined;
+	const result = await prisma.user.update({
+		data: {
+			username,
+			hashed_password: hashedPassword,
+		},
+		where: { id },
+	});
+	return {
+		error: !!result ? null : "Something went wrong. Please try again.",
+	};
+}
+
+export async function isUsernameTaken(data: Omit<Account, "newPassword">) {
+	const user = await prisma.user.findUnique({
+		where: {
+			username: data.username,
+		},
+	});
+
+	if (!user) return false;
+	const isOwnUsername = data.id === user.id;
+	// ignore if the account passed is the same as the one found, implying same owner
+	const result = !isOwnUsername;
+
+	return result;
+}

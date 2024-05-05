@@ -13,6 +13,12 @@ import { User2 } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";
 
+const userNavButtons: { href: string; title: string }[] = [
+	{ href: "/incoming", title: "Incoming" },
+	{ href: "/outgoing", title: "Outgoing" },
+	{ href: "/logs", title: "View Logs" },
+	{ href: "/settings", title: "Settings" },
+];
 export function UserNav() {
 	const { data } = useSWR("UserNav", getSession);
 	return (
@@ -43,9 +49,12 @@ export function UserNav() {
 				<DropdownMenuSeparator />
 				{data && data.user ? (
 					<>
-						<DropdownMenuItem asChild>
-							<Link href="/logs">View Logs</Link>
-						</DropdownMenuItem>
+						{userNavButtons.map((button, index) => (
+							<DropdownMenuItem key={index} asChild>
+								<Link href={button.href}>{button.title}</Link>
+							</DropdownMenuItem>
+						))}
+
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onSelect={async () => logout()}>
 							Logout
