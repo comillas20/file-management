@@ -289,7 +289,7 @@ function FileUploadCard({ form }: Form) {
 										field.value.map((file, index) => (
 											<div
 												key={index}
-												className="flex gap-1 group p-2 border rounded-sm items-center"
+												className="flex gap-1 group border rounded-sm items-center cursor-pointer"
 												onClick={() =>
 													field.onChange(
 														deleteFileFromArray(
@@ -298,13 +298,15 @@ function FileUploadCard({ form }: Form) {
 														)
 													)
 												}>
-												<span className="flex-1 text-ellipsis truncate text-xs font-medium">
+												<span className="flex-1 text-ellipsis truncate text-xs font-medium p-2">
 													{file.name}
 												</span>
-												<X
-													className="group-hover:inline hidden"
-													size={15}
-												/>
+												<button className="group/button justify-center items-center aspect-square group-hover:flex hidden p-2 rounded-e-sm hover:bg-destructive">
+													<X
+														className="group-hover/button:text-destructive-foreground"
+														size={15}
+													/>
+												</button>
 											</div>
 										))}
 								</div>
