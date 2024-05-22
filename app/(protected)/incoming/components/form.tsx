@@ -106,7 +106,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 						<span className="sr-only">Back</span>
 					</Button>
 					{data && (
-						<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-ellipsis">
+						<h1 className="flex-1 whitespace-nowrap text-xl font-semibold tracking-tight text-ellipsis overflow-hidden max-w-80">
 							{data.subject}
 						</h1>
 					)}
