@@ -6,11 +6,6 @@ import { SidebarNav } from "./components/sidebar-nav";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserNav } from "@/app/components/user-nav";
 
-export const metadata: Metadata = {
-	title: "Forms",
-	description: "Advanced form example using react-hook-form and Zod.",
-};
-
 const sidebarNavItems = [
 	{
 		title: "Account",
@@ -26,7 +21,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 	return (
 		<main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
 			<Card className="space-y-6">
-				<CardHeader className="flex flex-row justify-between items-center">
+				<CardHeader className="flex flex-row justify-between items-start">
 					<div className="space-y-0.5">
 						<h2 className="text-2xl font-bold tracking-tight">
 							Settings
