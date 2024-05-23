@@ -1,5 +1,5 @@
 "use client";
-import { Prisma } from "@prisma/client";
+import { Office, Prisma, Role } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "../../components/data-table-column-header";
 import { format, isBefore } from "date-fns";
@@ -26,45 +26,24 @@ import { ReceiverBadge } from "@/components/receiver-badge";
 import { formatFileSize } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type Doc = Prisma.DocumentsGetPayload<{
+type Doc = Prisma.DocumentsGetPayload<{
 	include: {
-		logs: true;
 		files: true;
 	};
 }>;
 
-// export const allDocColumns: ColumnDef<Doc>[] = [
-// 	{
-// 		accessorKey: "subject",
-// 		header: ({ column }) => (
-// 			<DataTableColumnHeader column={column} title="Subject" />
-// 		),
-// 	},
-// 	{
-// 		accessorKey: "flow",
-// 		header: ({ column }) => (
-// 			<DataTableColumnHeader column={column} title="Incoming/Outgoing" />
-// 		),
-// 	},
-// 	{
-// 		accessorKey: "date_released",
-// 		header: ({ column }) => (
-// 			<DataTableColumnHeader column={column} title="Date Released" />
-// 		),
-// 	},
-// 	{
-// 		accessorKey: "date_received",
-// 		header: ({ column }) => (
-// 			<DataTableColumnHeader column={column} title="Date Received" />
-// 		),
-// 	},
-// 	{
-// 		id: "actions",
-// 		cell: ({ row }) => <Button />,
-// 	},
-// ];
+export type ModDoc = Doc & {
+	logs: {
+		id: string;
+		logDate: string;
+		office: Office;
+		name: string;
+		role: Role;
+		documentsId: string;
+	}[];
+};
 
-export const incDocColumns: ColumnDef<Doc>[] = [
+export const incDocColumns: ColumnDef<ModDoc>[] = [
 	{
 		accessorKey: "subject",
 		header: ({ column }) => (
@@ -93,7 +72,6 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Received" />
 		),
-		cell: ({ row }) => format(row.original.logs[0].logDate, "PPP p"),
 	},
 	{
 		accessorKey: "signatory",
@@ -165,7 +143,7 @@ export const incDocColumns: ColumnDef<Doc>[] = [
 	},
 ];
 
-export const outDocColumns: ColumnDef<Doc>[] = [
+export const outDocColumns: ColumnDef<ModDoc>[] = [
 	{
 		accessorKey: "subject",
 		header: ({ column }) => (
@@ -207,7 +185,7 @@ export const outDocColumns: ColumnDef<Doc>[] = [
 	},
 	{
 		id: "Date Released",
-		accessorFn: row => format(row.logs[0].logDate, "PPP p"),
+		accessorFn: row => row.logs[0].logDate,
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Released" />
 		),

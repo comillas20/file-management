@@ -21,7 +21,7 @@ import {
 import { useState } from "react";
 import { DataTable } from "../../components/data-table";
 import { DataTablePagination } from "../../components/data-table-pagination";
-import { Doc } from "./columns";
+import { ModDoc } from "./columns";
 import { useDocuments } from "@/hooks/documents";
 import { Flow } from "@prisma/client";
 import { Input } from "@/components/ui/input";
@@ -29,13 +29,13 @@ import { Search } from "lucide-react";
 
 type DocumentTableProps = {
 	title: string;
-	columns: ColumnDef<Doc>[];
+	columns: ColumnDef<ModDoc>[];
 	flow: Flow;
-	data: Doc[] | undefined;
+	data: ModDoc[] | undefined;
 };
 export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [globalFilter, setGlobalFilter] = useState<string>("");
 
 	const table = useReactTable({
 		data: data ?? [],
@@ -45,10 +45,10 @@ export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
+		onGlobalFilterChange: setGlobalFilter,
 		state: {
 			sorting,
-			columnFilters,
+			globalFilter,
 		},
 		enableMultiRowSelection: false,
 		enableRowSelection: false,
@@ -66,17 +66,11 @@ export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 					<Input
 						type="search"
 						className="border-e-0 rounded-e-none z-10"
-						value={
-							(table
-								.getColumn("subject")
-								?.getFilterValue() as string) ?? ""
-						}
-						onChange={event =>
-							table
-								.getColumn("subject")
-								?.setFilterValue(event.target.value)
-						}
-						placeholder="Search a subject"
+						value={globalFilter}
+						onChange={event => {
+							setGlobalFilter(event.target.value);
+						}}
+						placeholder="Search subject or date"
 					/>
 					<span className="aspect-square border border-input bg-background h-10 flex items-center justify-center rounded-e-md">
 						<Search size={15} />

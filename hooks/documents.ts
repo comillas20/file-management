@@ -1,6 +1,6 @@
 import { getDocuments } from "@/action/documents";
 import { Documents, Log } from "@prisma/client";
-import { isSameDay } from "date-fns";
+import { format, isSameDay } from "date-fns";
 import useSWR, { mutate } from "swr";
 
 export function useDocuments() {
@@ -40,8 +40,16 @@ export function useDocuments() {
 		return docsInLogDate;
 	};
 
+	const moddifiedData = data?.map(d => ({
+		...d,
+		logs: d.logs.map(log => ({
+			...log,
+			logDate: format(log.logDate, "PPP p"),
+		})),
+	}));
+
 	return {
-		data,
+		data: moddifiedData,
 		error,
 		isLoading,
 		revalidateDocuments,
