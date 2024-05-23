@@ -49,7 +49,9 @@ export function DataTable<TData>({
 							className="data-[state=selected]:bg-primary data-[state=selected]:text-primary-foreground"
 							onClick={() => row.toggleSelected()}>
 							{row.getVisibleCells().map(cell => (
-								<TableCell key={cell.id}>
+								<TableCell
+									key={cell.id}
+									className="truncate md:max-w-20 lg:max-w-40 xl:max-w-60">
 									{flexRender(
 										cell.column.columnDef.cell,
 										cell.getContext()
