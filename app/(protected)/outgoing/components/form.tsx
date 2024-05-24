@@ -26,15 +26,19 @@ import {
 	outgoingDocumentSchema,
 } from "@/schema/outgoing-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Purpose } from "@prisma/client";
+import { Prisma, Purpose } from "@prisma/client";
 import { ChevronLeft, PlusIcon, X } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { ReceiverCard } from "./receiver-card";
-import { Doc } from "@/app/components/columns";
 
 type OutgoingFormProps = {
-	data?: Doc;
+	data?: Prisma.DocumentsGetPayload<{
+		include: {
+			logs: true;
+			files: true;
+		};
+	}>;
 };
 export function OutgoingForm({ data }: OutgoingFormProps) {
 	const { toast } = useToast();

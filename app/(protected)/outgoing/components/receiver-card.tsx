@@ -55,7 +55,16 @@ export function ReceiverCard({ form }: Form) {
 						<div
 							key={field.id}
 							className="flex gap-2 items-center group">
-							<ReceiverBadge data={field} className="flex-1" />
+							<ReceiverBadge
+								data={{
+									...field,
+									date_released: format(
+										field.date_released,
+										"PPP p"
+									),
+								}}
+								className="flex-1"
+							/>
 							<RecipientDialog
 								recipients={recipients}
 								data={{ ...field, index }}>

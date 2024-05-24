@@ -1,6 +1,5 @@
 "use client";
 import { createOrUpdateIncDocument } from "@/action/documents";
-import { Doc } from "@/app/components/columns";
 import { DatePicker } from "@/components/date-picker";
 import { TimePicker } from "@/components/time-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -30,13 +29,18 @@ import {
 	incomingDocumentSchema,
 } from "@/schema/incoming-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Office } from "@prisma/client";
+import { Office, Prisma } from "@prisma/client";
 import { ChevronLeft, PlusIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 
 type IncomingFormProps = {
-	data?: Doc;
+	data?: Prisma.DocumentsGetPayload<{
+		include: {
+			logs: true;
+			files: true;
+		};
+	}>;
 };
 export function IncomingForm({ data }: IncomingFormProps) {
 	const { toast } = useToast();
