@@ -97,11 +97,13 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 						{row.original.files.map(file => (
 							<div
 								key={file.id}
-								className="flex gap-2 justify-between items-center">
-								{file.name.concat(
-									" — ",
-									formatFileSize(file.size)
-								)}
+								className="grid gap-2 justify-between items-center grid-cols-6">
+								<span className="truncate col-span-5">
+									{file.name.concat(
+										" — ",
+										formatFileSize(file.size)
+									)}
+								</span>
 								<a
 									href={"files/" + file.name}
 									className={buttonVariants({
@@ -214,11 +216,13 @@ export const outDocColumns: ColumnDef<ModDoc>[] = [
 						{row.original.files.map(file => (
 							<div
 								key={file.id}
-								className="flex gap-2 justify-between items-center">
-								{file.name.concat(
-									" — ",
-									formatFileSize(file.size)
-								)}
+								className="grid gap-2 justify-between items-center grid-cols-6">
+								<span className="truncate col-span-5">
+									{file.name.concat(
+										" — ",
+										formatFileSize(file.size)
+									)}
+								</span>
 								<a
 									href={"files/" + file.name}
 									className={buttonVariants({
