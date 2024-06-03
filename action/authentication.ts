@@ -1,4 +1,5 @@
 "use server";
+import { ENABLE_REGISTRATION } from "@/config";
 import { lucia, validateRequest } from "@/lib/auth";
 import prisma from "@/lib/db";
 import { generateId } from "lucia";
@@ -58,6 +59,7 @@ type RegisterProps = {
 	password: string;
 };
 export async function register({ username, password }: RegisterProps) {
+	if (!ENABLE_REGISTRATION) return null;
 	const hashedPassword = await new Argon2id().hash(password);
 	const userId = generateId(15);
 	const newUser = await prisma.user.create({
