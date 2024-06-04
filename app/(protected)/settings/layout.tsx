@@ -27,8 +27,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
 							Settings
 						</h2>
 						<p className="text-muted-foreground">
-							Manage your account settings and set e-mail
-							preferences.
+							Manage your account settings
 						</p>
 					</div>
 					<UserNav />
