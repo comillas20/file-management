@@ -29,13 +29,13 @@ export function About({ className }: AboutProps) {
 			</DialogTrigger>
 			<DialogContent className="h-60">
 				<DialogHeader>
-					<DialogTitle>DMS</DialogTitle>
+					<DialogTitle>About</DialogTitle>
 				</DialogHeader>
 				<div>This work was done by</div>
 				<Link
 					href="https://www.facebook.com/comillas20"
 					target="_blank"
-					className="flex gap-8 items-center ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground p-4">
+					className="flex gap-8 items-center ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground px-4 py-2">
 					<Image
 						src={yuri}
 						alt="yuri"
@@ -47,7 +47,6 @@ export function About({ className }: AboutProps) {
 							Jino Joy C. Comillas
 						</p>
 						<p className="text-sm font-medium">OJT @ PICTU</p>
-						<p className="text-xs">March - June 2024</p>
 					</div>
 				</Link>
 			</DialogContent>
