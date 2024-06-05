@@ -44,7 +44,7 @@ export function useDocuments() {
 		...d,
 		logs: d.logs.map(log => ({
 			...log,
-			logDate: format(log.logDate, "PPP p"),
+			logDate: format(log.logDate, "PP p"),
 		})),
 	}));
 
