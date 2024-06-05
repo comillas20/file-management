@@ -9,8 +9,9 @@ export const outgoingDocumentSchema = z.object({
 			office: z.nativeEnum(Office),
 			date_released: z.date(),
 		})
-		.array(),
-	purpose: z.nativeEnum(Purpose),
+		.array()
+		.min(1, { message: "Provide atleast one receiver" }),
+	purpose: z.string().min(1, { message: "This is required" }),
 	files: z.instanceof(File).array().nullable(),
 });
 

@@ -12,6 +12,7 @@ import {
 	DialogFooter,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { FormField, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -87,6 +88,11 @@ export function ReceiverCard({ form }: Form) {
 							</Button>
 						</div>
 					))}
+				<FormField
+					control={form.control}
+					name="recipient"
+					render={() => <FormMessage />}
+				/>
 				<RecipientDialog recipients={recipients}>
 					<Button className="flex justify-center items-center">
 						<PlusIcon className="size-4" />
