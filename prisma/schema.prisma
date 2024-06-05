@@ -9,12 +9,13 @@ datasource db {
 
 model Documents {
   id        String  @id @default(cuid())
-  subject   String
-  purpose   String
+  subject   String  @db.Text
+  purpose   String  @db.Text
   logs      Log[]
   flow      Flow
   signatory String?
   files     File[]
+  remarks   String? @db.Text
 }
 
 model File {
@@ -38,12 +39,6 @@ model Log {
 enum Role {
   SENDER
   RECIPIENT
-}
-
-enum Purpose {
-  Information
-  Signature
-  Others
 }
 
 enum Office {

@@ -16,6 +16,7 @@ type IncDocument = {
 	};
 	signatory: string | null;
 	files: FormData | null;
+	remarks: string | null;
 };
 
 export async function createOrUpdateIncDocument(values: IncDocument) {
@@ -46,6 +47,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 						},
 				  }
 				: undefined,
+			remarks: values.remarks,
 		},
 		where: {
 			id: values.id,
@@ -85,6 +87,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 							documentsId: values.id,
 						},
 				  },
+			remarks: values.remarks,
 		},
 	});
 
@@ -96,6 +99,7 @@ type OutgoingDocType = {
 	subject: string;
 	purpose: string;
 	files: FormData | null;
+	remarks: string | null;
 	recipient: {
 		name: string;
 		office: Office;
@@ -131,6 +135,7 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 						},
 				  }
 				: undefined,
+			remarks: values.remarks,
 		},
 		where: {
 			id: values.id,
@@ -169,6 +174,7 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 							documentsId: values.id,
 						},
 				  },
+			remarks: values.remarks,
 		},
 	});
 

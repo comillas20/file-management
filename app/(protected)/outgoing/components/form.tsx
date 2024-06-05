@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { ReceiverCard } from "./receiver-card";
 import { DocumentCard } from "./document-card";
+import { Textarea } from "@/components/ui/textarea";
 
 type OutgoingFormProps = {
 	data?: Prisma.DocumentsGetPayload<{
@@ -49,6 +50,7 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 					})),
 					purpose: data.purpose,
 					files: data.files.map(file => new File([], file.name)),
+					remarks: data.remarks,
 			  }
 			: {
 					id: "ambatukam",
@@ -56,6 +58,7 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 					recipient: [],
 					purpose: "Information",
 					files: null,
+					remarks: null,
 			  },
 	});
 
@@ -122,6 +125,7 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 					</div>
 					<div className="grid auto-rows-max items-start gap-4 lg:gap-8">
 						<FileUploadCard form={form} />
+						<RemarksCard form={form} />
 					</div>
 				</div>
 				<div className="flex items-center justify-center gap-2 md:hidden">
@@ -157,7 +161,7 @@ function FileUploadCard({ form }: Form) {
 	return (
 		<Card className="overflow-hidden">
 			<CardHeader>
-				<CardTitle>Attachments</CardTitle>
+				<CardTitle className="text-lg">Attachments</CardTitle>
 			</CardHeader>
 			<CardContent className="flex flex-col gap-4">
 				<FormField
@@ -234,6 +238,34 @@ function FileUploadCard({ form }: Form) {
 					)}
 				/>
 			</CardContent>
+		</Card>
+	);
+}
+
+function RemarksCard({ form }: Form) {
+	return (
+		<Card>
+			<FormField
+				control={form.control}
+				name="remarks"
+				render={({ field }) => (
+					<FormItem>
+						<CardHeader>
+							<FormLabel className="font-semibold leading-none tracking-tight text-lg">
+								Remarks
+							</FormLabel>
+						</CardHeader>
+						<CardContent>
+							<FormControl>
+								<Textarea
+									{...field}
+									value={field.value ?? ""}
+								/>
+							</FormControl>
+						</CardContent>
+					</FormItem>
+				)}
+			/>
 		</Card>
 	);
 }

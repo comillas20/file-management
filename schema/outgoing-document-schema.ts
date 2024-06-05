@@ -13,6 +13,7 @@ export const outgoingDocumentSchema = z.object({
 		.min(1, { message: "Provide atleast one receiver" }),
 	purpose: z.string().min(1, { message: "This is required" }),
 	files: z.instanceof(File).array().nullable(),
+	remarks: z.string().nullable(),
 });
 
 export type OutgoingDocType = z.infer<typeof outgoingDocumentSchema>;

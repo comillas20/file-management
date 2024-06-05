@@ -10,6 +10,7 @@ export const incomingDocumentSchema = z.object({
 	}),
 	signatory: z.string().min(1, { message: "This is required" }).nullable(),
 	files: z.instanceof(File).array().nullable(),
+	remarks: z.string().nullable(),
 });
 
 export type IncomingDocType = z.infer<typeof incomingDocumentSchema>;

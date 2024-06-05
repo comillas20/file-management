@@ -3,7 +3,13 @@ import { createOrUpdateIncDocument } from "@/action/documents";
 import { DatePicker } from "@/components/date-picker";
 import { TimePicker } from "@/components/time-picker";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -59,6 +65,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					signatory: data.signatory,
 					date_received: data.logs[0].logDate,
 					files: data.files.map(file => new File([], file.name)),
+					remarks: data.remarks,
 			  }
 			: {
 					id: "ambatukam",
@@ -70,6 +77,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					signatory: "",
 					date_received: new Date(),
 					files: null,
+					remarks: null,
 			  },
 	});
 
@@ -134,6 +142,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					</div>
 					<div className="grid auto-rows-max items-start gap-4 lg:gap-8">
 						<FileUploadCard form={form} />
+						<RemarksCard form={form} />
 					</div>
 				</div>
 				<div className="flex items-center justify-center gap-2 md:hidden">
@@ -279,7 +288,7 @@ function FileUploadCard({ form }: Form) {
 	return (
 		<Card className="overflow-hidden">
 			<CardHeader>
-				<CardTitle>Attachments</CardTitle>
+				<CardTitle className="text-lg">Attachments</CardTitle>
 			</CardHeader>
 			<CardContent className="flex flex-col gap-4">
 				<FormField
@@ -356,6 +365,34 @@ function FileUploadCard({ form }: Form) {
 					)}
 				/>
 			</CardContent>
+		</Card>
+	);
+}
+
+function RemarksCard({ form }: Form) {
+	return (
+		<Card>
+			<FormField
+				control={form.control}
+				name="remarks"
+				render={({ field }) => (
+					<FormItem>
+						<CardHeader>
+							<FormLabel className="font-semibold leading-none tracking-tight text-lg">
+								Remarks
+							</FormLabel>
+						</CardHeader>
+						<CardContent>
+							<FormControl>
+								<Textarea
+									{...field}
+									value={field.value ?? ""}
+								/>
+							</FormControl>
+						</CardContent>
+					</FormItem>
+				)}
+			/>
 		</Card>
 	);
 }
