@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
-import { Office, Purpose } from "@prisma/client";
+import { Office } from "@prisma/client";
 import { access, mkdir, readdir, writeFile } from "fs/promises";
 import { join, parse } from "path";
 
@@ -25,7 +25,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 	const newDoc = await prisma.documents.upsert({
 		create: {
 			subject: values.subject,
-			purpose: "INFORMATION",
+			purpose: "Store",
 			signatory: values.signatory,
 			flow: "INCOMING",
 			logs: {
@@ -52,7 +52,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 		},
 		update: {
 			subject: values.subject,
-			purpose: "INFORMATION",
+			purpose: "Store",
 			signatory: values.signatory,
 			flow: "INCOMING",
 			logs: {
@@ -94,7 +94,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 type OutgoingDocType = {
 	id: string;
 	subject: string;
-	purpose: Purpose;
+	purpose: string;
 	files: FormData | null;
 	recipient: {
 		name: string;

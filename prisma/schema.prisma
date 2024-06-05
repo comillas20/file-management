@@ -10,7 +10,7 @@ datasource db {
 model Documents {
   id        String  @id @default(cuid())
   subject   String
-  purpose   Purpose
+  purpose   String
   logs      Log[]
   flow      Flow
   signatory String?
@@ -41,8 +41,9 @@ enum Role {
 }
 
 enum Purpose {
-  INFORMATION
-  SIGNATURE
+  Information
+  Signature
+  Others
 }
 
 enum Office {

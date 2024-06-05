@@ -10,14 +10,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocuments } from "@/hooks/documents";
 import { fileWrapper } from "@/lib/utils";
@@ -26,11 +18,12 @@ import {
 	outgoingDocumentSchema,
 } from "@/schema/outgoing-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma, Purpose } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ChevronLeft, PlusIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { ReceiverCard } from "./receiver-card";
+import { DocumentCard } from "./document-card";
 
 type OutgoingFormProps = {
 	data?: Prisma.DocumentsGetPayload<{
@@ -61,7 +54,7 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 					id: "ambatukam",
 					subject: "",
 					recipient: [],
-					purpose: "INFORMATION",
+					purpose: "Information",
 					files: null,
 			  },
 	});
@@ -154,59 +147,6 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 type Form = {
 	form: UseFormReturn<OutgoingDocType>;
 };
-
-function DocumentCard({ form }: Form) {
-	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Document</CardTitle>
-			</CardHeader>
-			<CardContent className="space-y-8">
-				<FormField
-					control={form.control}
-					name="subject"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Subject</FormLabel>
-							<FormControl>
-								<Textarea {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="purpose"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Purpose</FormLabel>
-							<FormControl>
-								<Select
-									value={field.value}
-									onValueChange={field.onChange}>
-									<SelectTrigger>
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										{Object.values(Purpose).map(purpose => (
-											<SelectItem
-												key={purpose}
-												value={purpose}>
-												{"For " + purpose.toLowerCase()}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			</CardContent>
-		</Card>
-	);
-}
 
 function FileUploadCard({ form }: Form) {
 	const deleteFileFromArray = (array: File[] | null, fileToRemove: File) => {

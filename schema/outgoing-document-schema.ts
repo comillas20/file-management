@@ -1,4 +1,4 @@
-import { Office, Purpose } from "@prisma/client";
+import { Office } from "@prisma/client";
 import z from "zod";
 export const outgoingDocumentSchema = z.object({
 	id: z.string(),
