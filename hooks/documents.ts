@@ -42,6 +42,7 @@ export function useDocuments() {
 
 	const moddifiedData = data?.map(d => ({
 		...d,
+		eventDate: format(d.eventDate, "PP p"),
 		logs: d.logs.map(log => ({
 			...log,
 			logDate: format(log.logDate, "PP p"),

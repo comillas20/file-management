@@ -64,6 +64,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					},
 					signatory: data.signatory,
 					date_received: data.logs[0].logDate,
+					eventDate: data.eventDate,
 					files: data.files.map(file => new File([], file.name)),
 					remarks: data.remarks,
 			  }
@@ -76,6 +77,7 @@ export function IncomingForm({ data }: IncomingFormProps) {
 					},
 					signatory: "",
 					date_received: new Date(),
+					eventDate: new Date(),
 					files: null,
 					remarks: null,
 			  },
@@ -206,6 +208,30 @@ function DocumentCard({ form }: Form) {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Date Received</FormLabel>
+							<FormControl>
+								<div className="flex gap-2">
+									<DatePicker
+										date={field.value}
+										onDateChange={field.onChange}
+										className="flex-1"
+									/>
+									<TimePicker
+										time={field.value}
+										onTimeChange={field.onChange}
+										className="w-auto"
+									/>
+								</div>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="eventDate"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Event Date</FormLabel>
 							<FormControl>
 								<div className="flex gap-2">
 									<DatePicker

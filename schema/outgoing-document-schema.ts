@@ -11,6 +11,7 @@ export const outgoingDocumentSchema = z.object({
 		})
 		.array()
 		.min(1, { message: "Provide atleast one receiver" }),
+	eventDate: z.date(),
 	purpose: z.string().min(1, { message: "This is required" }),
 	files: z.instanceof(File, { message: "Invalid File" }).array().nullable(),
 	remarks: z.string().nullable(),

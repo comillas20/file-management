@@ -18,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { useState } from "react";
+import { DatePicker } from "@/components/date-picker";
+import { TimePicker } from "@/components/time-picker";
 
 type Form = {
 	form: UseFormReturn<OutgoingDocType>;
@@ -54,6 +56,30 @@ export function DocumentCard({ form }: Form) {
 							<FormLabel>Subject</FormLabel>
 							<FormControl>
 								<Textarea {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="eventDate"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Event Date</FormLabel>
+							<FormControl>
+								<div className="flex gap-2">
+									<DatePicker
+										date={field.value}
+										onDateChange={field.onChange}
+										className="flex-1"
+									/>
+									<TimePicker
+										time={field.value}
+										onTimeChange={field.onChange}
+										className="w-auto"
+									/>
+								</div>
 							</FormControl>
 							<FormMessage />
 						</FormItem>

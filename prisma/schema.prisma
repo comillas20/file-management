@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Documents {
-  id        String  @id @default(cuid())
-  subject   String  @db.Text
-  purpose   String  @db.Text
+  id        String   @id @default(cuid())
+  subject   String   @db.Text
+  purpose   String   @db.Text
   logs      Log[]
+  eventDate DateTime @default(now())
   flow      Flow
   signatory String?
   files     File[]
-  remarks   String? @db.Text
+  remarks   String?  @db.Text
 }
 
 model File {

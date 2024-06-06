@@ -1,33 +1,31 @@
 "use client";
-import { Office, Prisma, Role } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "../../components/data-table-column-header";
-import { format, isBefore } from "date-fns";
-import { DownloadIcon, Loader2, MoreHorizontalIcon } from "lucide-react";
+import { deleteDocuments } from "@/action/documents";
+import { ReceiverBadge } from "@/components/receiver-badge";
+import { buttonVariants } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
-import { deleteDocuments } from "@/action/documents";
-import { useTransition } from "react";
-import { useDocuments } from "@/hooks/documents";
-import { toast } from "@/components/ui/use-toast";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { ReceiverBadge } from "@/components/receiver-badge";
-import { formatFileSize } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/use-toast";
+import { useDocuments } from "@/hooks/documents";
+import { formatFileSize } from "@/lib/utils";
+import { Office, Prisma, Role } from "@prisma/client";
+import { ColumnDef } from "@tanstack/react-table";
+import { format, isBefore } from "date-fns";
+import { DownloadIcon, Loader2, MoreHorizontalIcon } from "lucide-react";
+import Link from "next/link";
+import { useTransition } from "react";
+import { DataTableColumnHeader } from "../../components/data-table-column-header";
 
 type Doc = Prisma.DocumentsGetPayload<{
 	include: {
@@ -60,7 +58,7 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 			<DataTableColumnHeader column={column} title="Origin" />
 		),
 		cell: ({ row }) => (
-			<div className="space-x-2">
+			<div className="space-x-2 truncate">
 				<span>{row.original.logs[0].name}</span>
 				<span>—</span>
 				<span className="font-semibold">
@@ -75,6 +73,15 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Received" />
 		),
+		cell: ({ row }) => format(row.original.logs[0].logDate, "PP"),
+	},
+	{
+		id: "Event Date",
+		accessorKey: "eventDate",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Event Date" />
+		),
+		cell: ({ row }) => format(row.original.eventDate, "PP"),
 	},
 	{
 		accessorKey: "signatory",
@@ -267,6 +274,15 @@ export const outDocColumns: ColumnDef<ModDoc>[] = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} title="Date Released" />
 		),
+		cell: ({ row }) => format(row.original.logs[0].logDate, "PP"),
+	},
+	{
+		id: "Event Date",
+		accessorKey: "eventDate",
+		header: ({ column }) => (
+			<DataTableColumnHeader column={column} title="Event Date" />
+		),
+		cell: ({ row }) => format(row.original.eventDate, "PP"),
 	},
 	{
 		accessorKey: "purpose",

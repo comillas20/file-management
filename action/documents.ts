@@ -10,6 +10,7 @@ type IncDocument = {
 	id: string;
 	subject: string;
 	date_received: Date;
+	eventDate: Date;
 	sender: {
 		name: string;
 		office: Office;
@@ -26,6 +27,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 	const newDoc = await prisma.documents.upsert({
 		create: {
 			subject: values.subject,
+			eventDate: values.eventDate,
 			purpose: "Store",
 			signatory: values.signatory,
 			flow: "INCOMING",
@@ -54,6 +56,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 		},
 		update: {
 			subject: values.subject,
+			eventDate: values.eventDate,
 			purpose: "Store",
 			signatory: values.signatory,
 			flow: "INCOMING",
@@ -97,6 +100,7 @@ export async function createOrUpdateIncDocument(values: IncDocument) {
 type OutgoingDocType = {
 	id: string;
 	subject: string;
+	eventDate: Date;
 	purpose: string;
 	files: FormData | null;
 	remarks: string | null;
@@ -113,6 +117,7 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 	const newDoc = await prisma.documents.upsert({
 		create: {
 			subject: values.subject,
+			eventDate: values.eventDate,
 			purpose: values.purpose,
 			flow: "OUTGOING",
 			logs: {
@@ -142,6 +147,7 @@ export async function createOrUpdateOutDocument(values: OutgoingDocType) {
 		},
 		update: {
 			subject: values.subject,
+			eventDate: values.eventDate,
 			purpose: values.purpose,
 			flow: "OUTGOING",
 			logs: {
