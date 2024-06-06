@@ -1,5 +1,4 @@
 import { Office } from "@prisma/client";
-import { format } from "date-fns";
 
 type ReceiverBadgeProps = {
 	data: {

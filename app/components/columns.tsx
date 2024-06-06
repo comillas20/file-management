@@ -319,22 +319,111 @@ export const outDocColumns: ColumnDef<ModDoc>[] = [
 	{
 		id: "actions",
 		cell: ({ row }) => {
+			const firstReleaseLog = row.original.logs[0];
 			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger>
-						<MoreHorizontalIcon className="size-4" />
-						<span className="sr-only">Open menu</span>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent className="w-40">
-						<DropdownMenuItem asChild>
-							<Link
-								href={`/outgoing/update?doc=${row.original.id}`}>
-								Edit
-							</Link>
-						</DropdownMenuItem>
-						<DeleteDocument id={row.original.id} />
-					</DropdownMenuContent>
-				</DropdownMenu>
+				<Dialog>
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<MoreHorizontalIcon className="size-4" />
+							<span className="sr-only">Open menu</span>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent className="w-40">
+							<DialogTrigger asChild>
+								<DropdownMenuItem>View</DropdownMenuItem>
+							</DialogTrigger>
+							<DropdownMenuItem asChild>
+								<Link
+									href={`/outgoing/update?doc=${row.original.id}`}>
+									Edit
+								</Link>
+							</DropdownMenuItem>
+							<DeleteDocument id={row.original.id} />
+						</DropdownMenuContent>
+					</DropdownMenu>
+					<DialogContent>
+						<DialogHeader className="space-y-4">
+							<DialogTitle>Outgoing Document</DialogTitle>
+							<div className="flex justify-between items-center space-y-0">
+								<div className="flex items-center gap-4">
+									<div>
+										<h5 className="text-sm font-medium">
+											{row.original.purpose}
+										</h5>
+										<p className="text-xs">Purpose</p>
+									</div>
+								</div>
+								<div className="flex flex-col items-end">
+									<h5 className="text-sm">
+										{format(
+											firstReleaseLog.logDate,
+											"PPPP"
+										)}
+									</h5>
+									<div className="justify-end text-xs">
+										{"First sent @ " +
+											format(
+												firstReleaseLog.logDate,
+												"p"
+											)}
+									</div>
+								</div>
+							</div>
+						</DialogHeader>
+						<Separator />
+						<div className="flex-1 space-y-8">
+							<h3 className="font-medium">
+								{row.original.subject}
+							</h3>
+							<div className="space-y-2">
+								<p className="font-medium text-sm">
+									Recipients
+								</p>
+								<div className="space-y-1 ml-2">
+									{row.original.logs.map(log => (
+										<ReceiverBadge
+											key={log.id}
+											data={{
+												...log,
+												date_released: format(
+													log.logDate,
+													"PPPP @ p"
+												),
+											}}
+										/>
+									))}
+								</div>
+							</div>
+						</div>
+						<Separator />
+						<div>
+							<h5 className="text-sm font-medium">
+								{row.original.files.length > 0
+									? "Attachments"
+									: "No Attachments"}
+							</h5>
+							{row.original.files.map(file => (
+								<div
+									key={file.id}
+									className="grid gap-2 justify-center items-center grid-cols-6">
+									<span className="col-span-5 truncate text-sm">
+										{file.name}
+									</span>
+									<div className="w-full flex items-center justify-center">
+										<a
+											href={"files/" + file.name}
+											className={buttonVariants({
+												variant: "outline",
+												size: "icon",
+											})}
+											download>
+											<DownloadIcon className="size-4" />
+										</a>
+									</div>
+								</div>
+							))}
+						</div>
+					</DialogContent>
+				</Dialog>
 			);
 		},
 	},
