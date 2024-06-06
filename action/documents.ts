@@ -3,7 +3,7 @@
 import prisma from "@/lib/db";
 import { fileUnwrapper } from "@/lib/utils";
 import { Office } from "@prisma/client";
-import { access, mkdir, readdir, writeFile } from "fs/promises";
+import { access, mkdir, readdir, writeFile, stat } from "fs/promises";
 import { join, parse } from "path";
 
 type IncDocument = {
@@ -193,25 +193,44 @@ async function saveFiles(files: File[]) {
 	const filePromises = files.map(async file => {
 		const bytes = await file.arrayBuffer();
 		const buffer = Buffer.from(bytes);
-		const moddifiedFilename = await modifyFilename(file.name);
-		const path = join(process.cwd(), "public/files", moddifiedFilename);
+		const moddifiedFile = await modifyFile(file.name, file.size);
+		const path = join(process.cwd(), "public/files", moddifiedFile.name);
 		writeFile(path, buffer);
-		return {
-			name: moddifiedFilename,
-			size: file.size,
-		};
+		return moddifiedFile;
 	});
 
 	return await Promise.all(filePromises);
 }
 
-async function modifyFilename(filename: string) {
+async function modifyFile(filename: string, filesize: number) {
 	let fileExists = true;
 	let newFilename = filename;
+	let newFilesize = filesize;
+	const filePath = join(process.cwd(), "public/files", newFilename);
 
 	for (var i = 2; fileExists; i++) {
 		try {
-			await access(join(process.cwd(), "public/files", newFilename));
+			// error thrown if the file is either not accessable/does not exists
+			await access(filePath);
+			const { size } = await stat(filePath);
+
+			/* same size means its the same file;
+			   filesize === 0 means its a dummy file created in the client,
+			   since I can't get the actual file from server to render;
+
+			   Need to assume file doesnt exists, to replace the file upon saving,
+			   in both cases
+			 */
+			if (filesize === 0 || filesize === size) {
+				newFilesize = size; // only matters when filesize = 0
+				fileExists = false;
+				console.log({
+					name: newFilename,
+					filesize: filesize,
+					size: size,
+				});
+				break;
+			}
 			const parsedPath = parse(filename);
 			newFilename = join(
 				parsedPath.dir,
@@ -219,9 +238,13 @@ async function modifyFilename(filename: string) {
 			);
 		} catch (err) {
 			fileExists = false;
+			break;
 		}
 	}
-	return newFilename;
+	return {
+		name: newFilename,
+		size: newFilesize,
+	};
 }
 
 export async function getDocuments() {
