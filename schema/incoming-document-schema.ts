@@ -9,7 +9,7 @@ export const incomingDocumentSchema = z.object({
 		office: z.nativeEnum(Office),
 	}),
 	signatory: z.string().min(1, { message: "This is required" }).nullable(),
-	files: z.instanceof(File).array().nullable(),
+	files: z.instanceof(File, { message: "Invalid file" }).array().nullable(),
 	remarks: z.string().nullable(),
 });
 
