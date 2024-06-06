@@ -127,7 +127,7 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 	{
 		id: "actions",
 		cell: ({ row }) => {
-			const logDate = new Date(row.original.logs[0].logDate);
+			const receivedLog = row.original.logs[0];
 			return (
 				<Dialog>
 					<DropdownMenu>
@@ -165,10 +165,11 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 								</div>
 								<div className="flex flex-col items-end">
 									<h5 className="text-sm">
-										{format(logDate, "PPPP")}
+										{format(receivedLog.logDate, "PPPP")}
 									</h5>
-									<div className="justify-end text-xs capitalize">
-										{"Received @ " + format(logDate, "p")}
+									<div className="justify-end text-xs">
+										{"Received @ " +
+											format(receivedLog.logDate, "p")}
 									</div>
 								</div>
 							</div>
@@ -187,7 +188,11 @@ export const incDocColumns: ColumnDef<ModDoc>[] = [
 						</div>
 						<Separator />
 						<div>
-							<h5 className="text-sm font-medium">Attachments</h5>
+							<h5 className="text-sm font-medium">
+								{row.original.files.length > 0
+									? "Attachments"
+									: "No Attachments"}
+							</h5>
 							{row.original.files.map(file => (
 								<div
 									key={file.id}
