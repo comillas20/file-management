@@ -1,0 +1,5 @@
+npm install
+
+DATABASE_URL="mysql://user:pass@localhost:3306/db-name"
+
+npx prisma db push
