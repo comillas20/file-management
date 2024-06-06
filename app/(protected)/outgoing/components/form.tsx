@@ -19,7 +19,7 @@ import {
 } from "@/schema/outgoing-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "@prisma/client";
-import { ChevronLeft, PlusIcon, X } from "lucide-react";
+import { ChevronLeft, Loader2, PlusIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { ReceiverCard } from "./receiver-card";
@@ -113,8 +113,12 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 						<Button
 							type="submit"
 							size="sm"
-							disabled={!form.formState.isDirty}>
-							Save
+							disabled={form.formState.isSubmitting}>
+							{form.formState.isSubmitting ? (
+								<Loader2 className="animate-spin" />
+							) : (
+								"Save"
+							)}
 						</Button>
 					</div>
 				</div>
@@ -139,8 +143,12 @@ export function OutgoingForm({ data }: OutgoingFormProps) {
 					<Button
 						type="submit"
 						size="sm"
-						disabled={!form.formState.isDirty}>
-						Save
+						disabled={form.formState.isSubmitting}>
+						{form.formState.isSubmitting ? (
+							<Loader2 className="animate-spin" />
+						) : (
+							"Save"
+						)}
 					</Button>
 				</div>
 			</form>
@@ -197,6 +205,7 @@ function FileUploadCard({ form }: Form) {
 										))}
 								</div>
 							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>

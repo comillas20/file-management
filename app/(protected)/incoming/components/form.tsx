@@ -36,7 +36,7 @@ import {
 } from "@/schema/incoming-document-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Office, Prisma } from "@prisma/client";
-import { ChevronLeft, PlusIcon, X } from "lucide-react";
+import { ChevronLeft, PlusIcon, X, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { UseFormReturn, useForm } from "react-hook-form";
 
@@ -130,8 +130,15 @@ export function IncomingForm({ data }: IncomingFormProps) {
 							onClick={() => form.reset()}>
 							Discard
 						</Button>
-						<Button type="submit" size="sm">
-							Save
+						<Button
+							type="submit"
+							size="sm"
+							disabled={form.formState.isSubmitting}>
+							{form.formState.isSubmitting ? (
+								<Loader2 className="animate-spin" />
+							) : (
+								"Save"
+							)}
 						</Button>
 					</div>
 				</div>
@@ -153,8 +160,15 @@ export function IncomingForm({ data }: IncomingFormProps) {
 						onClick={() => form.reset()}>
 						Discard
 					</Button>
-					<Button type="submit" size="sm">
-						Save
+					<Button
+						type="submit"
+						size="sm"
+						disabled={form.formState.isSubmitting}>
+						{form.formState.isSubmitting ? (
+							<Loader2 className="animate-spin" />
+						) : (
+							"Save"
+						)}
 					</Button>
 				</div>
 			</form>
