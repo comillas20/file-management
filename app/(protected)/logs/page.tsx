@@ -58,28 +58,36 @@ export default function LogsPage() {
 											</span>
 										</div>
 									)}
-									<ul className="space-y-1">
-										<h4 className="font-medium text-lg">
+									<ul className="space-y-1 bg-muted p-4 rounded-md">
+										<h4 className="font-semibold text-lg">
 											{format(d.logDate, "PPP")}
 										</h4>
 										{d.documents.map(document => (
 											<li
 												key={document.id}
-												className="ml-8 list-disc text-lg">
-												{document.subject.concat(
-													document.flow === "INCOMING"
-														? " received from "
-														: document.purpose ===
-														  "INFORMATION"
-														? " sent to "
-														: " sent to be signed by ",
-													document.office,
-													" @ ",
-													format(
-														document.logDate,
-														"p"
-													)
+												className="ml-8 list-disc text-lg space-x-1.5">
+												<span className="font-medium">
+													{document.subject}
+												</span>
+												{document.flow ===
+												"INCOMING" ? (
+													<span className="text-blue-600">
+														received from
+													</span>
+												) : (
+													<span className="text-green-600">
+														sent to
+													</span>
 												)}
+												<span>
+													{document.office.concat(
+														" @ ",
+														format(
+															document.logDate,
+															"p"
+														)
+													)}
+												</span>
 											</li>
 										))}
 									</ul>
