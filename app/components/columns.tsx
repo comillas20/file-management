@@ -33,7 +33,7 @@ type Doc = Prisma.DocumentsGetPayload<{
 	};
 }>;
 
-export type ModDoc = Doc & {
+export type ModDoc = Omit<Doc, "eventDate"> & {
 	logs: {
 		id: string;
 		logDate: string;
@@ -42,6 +42,7 @@ export type ModDoc = Doc & {
 		role: Role;
 		documentsId: string;
 	}[];
+	eventDate: string;
 };
 
 export const incDocColumns: ColumnDef<ModDoc>[] = [
