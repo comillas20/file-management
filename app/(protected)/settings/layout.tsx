@@ -20,7 +20,7 @@ interface SettingsLayoutProps {
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
 	return (
 		<main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-			<Card className="space-y-6">
+			<Card className="space-y-6 shadow-md">
 				<CardHeader className="flex flex-row justify-between items-start">
 					<div className="space-y-0.5">
 						<h2 className="text-2xl font-bold tracking-tight">

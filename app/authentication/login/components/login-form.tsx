@@ -43,6 +43,7 @@ export function LoginForm() {
 	return (
 		<Card className="mx-auto max-w-sm w-80">
 			<CardHeader>
+		<Card className="mx-auto max-w-sm w-80 shadow-md">
 				<CardTitle className="text-2xl">DMS Login</CardTitle>
 			</CardHeader>
 			<CardContent>

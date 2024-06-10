@@ -54,7 +54,7 @@ export function DocumentTable({ title, columns, data }: DocumentTableProps) {
 		enableRowSelection: false,
 	});
 	return (
-		<Card>
+		<Card className="shadow-md">
 			<CardHeader className="flex-row gap-4 justify-between">
 				<div className="flex flex-col space-y-1.5">
 					<CardTitle>{title}</CardTitle>

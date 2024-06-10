@@ -26,7 +26,7 @@ export function UserNav() {
 			<DropdownMenuTrigger asChild>
 				<Button
 					variant="outline"
-					className="flex items-center justify-center rounded-full bg-muted"
+					className="flex items-center justify-center rounded-full bg-muted shadow-md"
 					size="icon">
 					{data && data.user ? (
 						data.user.username.charAt(0).toUpperCase()
