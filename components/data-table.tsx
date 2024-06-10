@@ -46,7 +46,7 @@ export function DataTable<TData>({
 						<TableRow
 							key={row.id}
 							data-state={row.getIsSelected() && "selected"}
-							className="data-[state=selected]:bg-primary data-[state=selected]:text-primary-foreground"
+							className="data-[state=selected]:bg-primary data-[state=selected]:text-primary-foreground even:bg-primary/20 odd:bg-primary/10"
 							onClick={() => row.toggleSelected()}>
 							{row.getVisibleCells().map(cell => (
 								<TableCell

@@ -1,9 +1,10 @@
 "use client";
 import { UserNav } from "@/app/components/user-nav";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useDocuments } from "@/hooks/documents";
-import { format, getYear, isBefore, isSameMonth, isSameYear } from "date-fns";
+import { format, isBefore, isSameMonth } from "date-fns";
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -32,69 +33,74 @@ export default function LogsPage() {
 						<UserNav />
 					</div>
 				</div>
-				<div className="border border-card p-4 flex flex-col gap-4">
-					{data
-						?.sort((a, b) =>
-							isBefore(a.logDate, b.logDate) ? 1 : -1
-						)
-						.map((d, index, data) => {
-							const isMonthBlockStart =
-								index > 0 &&
-								!isSameMonth(
-									data[index - 1].logDate,
-									d.logDate
-								);
+				<ScrollArea className="max-h-[75vh]">
+					<div className="p-4 flex flex-col gap-y-4 ">
+						{data
+							?.sort((a, b) =>
+								isBefore(a.logDate, b.logDate) ? 1 : -1
+							)
+							.map((d, index, data) => {
+								const isMonthBlockStart =
+									index > 0 &&
+									!isSameMonth(
+										data[index - 1].logDate,
+										d.logDate
+									);
 
-							const isFirstMonthBlock = index === 0;
+								const isFirstMonthBlock = index === 0;
 
-							return (
-								<React.Fragment key={index}>
-									{(isMonthBlockStart ||
-										isFirstMonthBlock) && (
-										<div className="py-2 relative flex items-center justify-center">
-											<Separator className="absolute" />
-											<span className="bg-background px-2 font-bold z-10">
-												{format(d.logDate, "MMMM yyyy")}
-											</span>
-										</div>
-									)}
-									<ul className="space-y-1 bg-muted p-4 rounded-md">
-										<h4 className="font-semibold text-lg">
-											{format(d.logDate, "PPP")}
-										</h4>
-										{d.documents.map(document => (
-											<li
-												key={document.id}
-												className="ml-8 list-disc text-lg space-x-1.5">
-												<span className="font-medium">
-													{document.subject}
-												</span>
-												{document.flow ===
-												"INCOMING" ? (
-													<span className="text-blue-600">
-														received from
-													</span>
-												) : (
-													<span className="text-green-600">
-														sent to
-													</span>
-												)}
-												<span>
-													{document.office.concat(
-														" @ ",
-														format(
-															document.logDate,
-															"p"
-														)
+								return (
+									<React.Fragment key={index}>
+										{(isMonthBlockStart ||
+											isFirstMonthBlock) && (
+											<div className="py-2 relative flex items-center justify-center">
+												<Separator className="absolute" />
+												<span className="bg-background px-2 font-bold z-10">
+													{format(
+														d.logDate,
+														"MMMM yyyy"
 													)}
 												</span>
-											</li>
-										))}
-									</ul>
-								</React.Fragment>
-							);
-						})}
-				</div>
+											</div>
+										)}
+										<ul className="space-y-1 bg-muted p-4 rounded-md">
+											<h4 className="font-semibold text-lg">
+												{format(d.logDate, "PPP")}
+											</h4>
+											{d.documents.map(document => (
+												<li
+													key={document.id}
+													className="ml-8 list-disc text-lg space-x-1.5">
+													<span className="font-medium">
+														{document.subject}
+													</span>
+													{document.flow ===
+													"INCOMING" ? (
+														<span className="text-blue-600">
+															received from
+														</span>
+													) : (
+														<span className="text-green-600">
+															sent to
+														</span>
+													)}
+													<span>
+														{document.office.concat(
+															" @ ",
+															format(
+																document.logDate,
+																"p"
+															)
+														)}
+													</span>
+												</li>
+											))}
+										</ul>
+									</React.Fragment>
+								);
+							})}
+					</div>
+				</ScrollArea>
 			</main>
 		</div>
 	);

@@ -1,10 +1,7 @@
-import { Metadata } from "next";
-import Image from "next/image";
-
+import { UserNav } from "@/app/components/user-nav";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "./components/sidebar-nav";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { UserNav } from "@/app/components/user-nav";
 
 const sidebarNavItems = [
 	{

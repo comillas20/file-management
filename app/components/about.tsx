@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import yuri from "@/public/yuri.jpg";
+import yuri from "@/public/assets/images/yuri.jpg";
 import { ThumbsUpIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

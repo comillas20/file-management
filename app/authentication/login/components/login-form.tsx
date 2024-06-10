@@ -23,6 +23,9 @@ import { Login, loginSchema } from "@/schema/login-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import Image from "next/image";
+import sdn_logo from "@/public/assets/images/SDN_LOGO.png";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 export function LoginForm() {
 	const form = useForm<Login>({
@@ -41,9 +44,14 @@ export function LoginForm() {
 		}
 	}
 	return (
-		<Card className="mx-auto max-w-sm w-80">
-			<CardHeader>
 		<Card className="mx-auto max-w-sm w-80 shadow-md">
+			<CardHeader className="items-center">
+				<Image
+					src={sdn_logo}
+					alt="SDN Logo"
+					width={244}
+					className="size-20"
+				/>
 				<CardTitle className="text-2xl">DMS Login</CardTitle>
 			</CardHeader>
 			<CardContent>
