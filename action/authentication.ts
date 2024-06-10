@@ -70,6 +70,7 @@ export async function register({ username, password }: RegisterProps) {
 		},
 	});
 
+	if (!newUser) return null;
 	const session = await lucia.createSession(userId, {});
 	const sessionCookie = lucia.createSessionCookie(session.id);
 	cookies().set(
