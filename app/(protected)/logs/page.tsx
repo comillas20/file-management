@@ -16,7 +16,7 @@ export default function LogsPage() {
 	return (
 		<div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
 			<main className="mx-auto grid w-[59rem] flex-1 auto-rows-max gap-4">
-				<div className="flex items-center gap-4">
+				<div className="flex items-center gap-4 bg-primary p-2 rounded-md">
 					<Button
 						type="button"
 						variant="outline"
@@ -26,7 +26,7 @@ export default function LogsPage() {
 						<ChevronLeft className="size-4" />
 						<span className="sr-only">Back</span>
 					</Button>
-					<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-ellipsis">
+					<h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-ellipsis text-primary-foreground">
 						Logs
 					</h1>
 					<div className="flex justify-end ml-auto">
